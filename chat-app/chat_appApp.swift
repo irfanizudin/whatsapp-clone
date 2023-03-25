@@ -9,9 +9,15 @@ import SwiftUI
 
 @main
 struct chat_appApp: App {
+    @StateObject var vm = AuthenticationViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if vm.isLoginMode {
+                LoginView()
+            } else {
+                RegisterView()
+            }
         }
     }
 }

@@ -11,6 +11,10 @@
 		2E3ACF8229CEA7A700CB746D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3ACF8129CEA7A700CB746D /* ContentView.swift */; };
 		2E3ACF8429CEA7A800CB746D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E3ACF8329CEA7A800CB746D /* Assets.xcassets */; };
 		2E3ACF8729CEA7A800CB746D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E3ACF8629CEA7A800CB746D /* Preview Assets.xcassets */; };
+		2E3ACF8F29CEA82D00CB746D /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3ACF8E29CEA82D00CB746D /* LoginView.swift */; };
+		2E3ACF9129CEA8BC00CB746D /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3ACF9029CEA8BC00CB746D /* RegisterView.swift */; };
+		2E3ACF9429CEAAAB00CB746D /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3ACF9329CEAAAB00CB746D /* Color.swift */; };
+		2E3ACF9629CEAD4100CB746D /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3ACF9529CEAD4100CB746D /* AuthenticationViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +23,10 @@
 		2E3ACF8129CEA7A700CB746D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2E3ACF8329CEA7A800CB746D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2E3ACF8629CEA7A800CB746D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2E3ACF8E29CEA82D00CB746D /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		2E3ACF9029CEA8BC00CB746D /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		2E3ACF9329CEAAAB00CB746D /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		2E3ACF9529CEAD4100CB746D /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +59,8 @@
 		2E3ACF7E29CEA7A700CB746D /* chat-app */ = {
 			isa = PBXGroup;
 			children = (
+				2E3ACF9229CEAA9C00CB746D /* Utils */,
+				2E3ACF8D29CEA81000CB746D /* Authentication */,
 				2E3ACF7F29CEA7A700CB746D /* chat_appApp.swift */,
 				2E3ACF8129CEA7A700CB746D /* ContentView.swift */,
 				2E3ACF8329CEA7A800CB746D /* Assets.xcassets */,
@@ -65,6 +75,24 @@
 				2E3ACF8629CEA7A800CB746D /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2E3ACF8D29CEA81000CB746D /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				2E3ACF8E29CEA82D00CB746D /* LoginView.swift */,
+				2E3ACF9029CEA8BC00CB746D /* RegisterView.swift */,
+				2E3ACF9529CEAD4100CB746D /* AuthenticationViewModel.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		2E3ACF9229CEAA9C00CB746D /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				2E3ACF9329CEAAAB00CB746D /* Color.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,7 +165,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E3ACF9629CEAD4100CB746D /* AuthenticationViewModel.swift in Sources */,
+				2E3ACF8F29CEA82D00CB746D /* LoginView.swift in Sources */,
+				2E3ACF9129CEA8BC00CB746D /* RegisterView.swift in Sources */,
 				2E3ACF8229CEA7A700CB746D /* ContentView.swift in Sources */,
+				2E3ACF9429CEAAAB00CB746D /* Color.swift in Sources */,
 				2E3ACF8029CEA7A700CB746D /* chat_appApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
