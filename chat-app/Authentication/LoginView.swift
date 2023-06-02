@@ -6,62 +6,99 @@
 //
 
 import SwiftUI
+import AuthenticationServices
 
 struct LoginView: View {
-    @StateObject var vm = AuthenticationViewModel()
-    @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                TextField("Email", text: $vm.email)
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.none)
-                    .keyboardType(.emailAddress)
-                    .padding()
-                    .background(Color(UIColor.systemFill))
-                    .cornerRadius(10)
-                    .padding(.top, 30)
-                
-                SecureField("Password", text: $vm.password)
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.none)
-                    .keyboardType(.emailAddress)
-                    .padding()
-                    .background(Color(UIColor.systemFill))
-                    .cornerRadius(10)
-                
-                Button {
-                    print("submit")
-                } label: {
-                    Text("Login")
-                        .foregroundColor(Color.white)
-                        .font(.headline)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color(Pallete.TealGreen.rawValue))
-                        .cornerRadius(10)
-                }
-                
+        ZStack {
+            Color(Pallete.BackgroundChat.rawValue).ignoresSafeArea()
+           
+            VStack {
+                Text("Welcome to")
+                    .font(.title2)
+                    .padding(.top, 50)
+                    .padding(.bottom, 5)
+                Text("WhatsChat")
+                    .font(.largeTitle.bold())
+                    
                 Spacer()
                 
-            }
-            .padding(20)
-            .background(Color(UIColor.systemBackground))
-            .navigationTitle("Login")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark.circle")
-                            .foregroundColor(Color(UIColor.label))
+                Image(systemName: "message.badge.filled.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 150, height: 150)
+                
+                Spacer()
+                Text("Login to start a chat")
+                    .font(.body)
+                    .padding(.bottom)
+                
+                VStack {
+                    HStack {
+                       Image("google-logo")
+                            .resizable()
+                            .renderingMode(.template)
+                            .scaledToFit()
+                            .frame(width: 25, height: 25)
+                            .padding(.trailing)
+                        
+                        Text("Continue with Google")
+                            .font(.callout.bold())
+                            .foregroundColor(.black)
+                            
                     }
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(.white)
+                    }
+                    .overlay {
+                        GoogleSignInButton()
+                            .onTapGesture {
+                                
+                            }
+                            .blendMode(.overlay)
+                    }
+                    
+                    HStack {
+                       Image(systemName: "apple.logo")
+                            .resizable()
+                            .renderingMode(.template)
+                            .scaledToFit()
+                            .frame(width: 25, height: 25)
+                            .padding(.trailing)
 
+                        
+                        Text("Continue with Apple")
+                            .font(.callout.bold())
+                    }
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(.black)
+                    }
+                    .overlay {
+                        SignInWithAppleButton { request in
+                            
+//                            vm.signInWithAppleRequest(request: request)
+                            
+                        } onCompletion: { result in
+                            
+//                            vm.signInWithAppleCompletion(result: result)
+                        }
+                        .signInWithAppleButtonStyle(.white)
+                        .blendMode(.overlay)
+                    }
+                    .padding(.top, 10)
+                    .padding(.bottom, 50)
                 }
+                .padding(.horizontal, 20)
             }
         }
-        
     }
 }
 

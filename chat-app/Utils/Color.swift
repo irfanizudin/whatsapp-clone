@@ -9,7 +9,7 @@ import Foundation
 
 enum Pallete: String {
     case Blue
-    case TealGreen
-    case TealGreenDark
-    case LightGreen
+    case BackgroundChat
+    case BubbleGreen
+    case Red
 }
