@@ -9,7 +9,8 @@ import SwiftUI
 import AuthenticationServices
 
 struct LoginView: View {
-    
+    @EnvironmentObject var vm: AuthenticationViewModel
+
     var body: some View {
         ZStack {
             Color(Pallete.BackgroundChat.rawValue).ignoresSafeArea()
@@ -57,7 +58,7 @@ struct LoginView: View {
                     .overlay {
                         GoogleSignInButton()
                             .onTapGesture {
-                                
+                                vm.signInWithGoogle()
                             }
                             .blendMode(.overlay)
                     }
@@ -105,5 +106,6 @@ struct LoginView: View {
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()
+            .environmentObject(AuthenticationViewModel())
     }
 }

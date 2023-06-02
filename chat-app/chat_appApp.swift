@@ -11,11 +11,12 @@ import FirebaseCore
 @main
 struct chat_appApp: App {
     @StateObject var vm = AuthenticationViewModel()
-    
+
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(vm)
         }
     }
 }

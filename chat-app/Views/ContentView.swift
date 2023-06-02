@@ -8,13 +8,28 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @EnvironmentObject var vm: AuthenticationViewModel
+    @AppStorage("isSignedIn") var isSignedIn: Bool = false
+
     var body: some View {
-        LoginView()
+        Group {
+            if isSignedIn {
+                MainView()
+                    .environmentObject(vm)
+            } else {
+                LoginView()
+                    .environmentObject(vm)
+            }
+
+        }
+
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environmentObject(AuthenticationViewModel())
     }
 }
