@@ -10,7 +10,7 @@ import SwiftUI
 struct MainView: View {
     
     @EnvironmentObject var vm: AuthenticationViewModel
-
+    
     var body: some View {
         VStack {
             Text(vm.user?.fullName ?? "")
@@ -28,12 +28,13 @@ struct MainView: View {
                 
             }
             .padding(.top, 10)
-
+            
         }
         .padding(.horizontal, 20)
         .onAppear {
             vm.fetchUserData()
         }
+        
     }
 }
 

@@ -10,7 +10,13 @@ import Foundation
 struct UserModel {
     let uid: String?
     let fullName: String?
+    let username: String?
     let email: String?
+    let photoURL: String?
+    let photoName: String?
+}
+
+struct UpdatePhoto {
     let photoURL: String?
     let photoName: String?
 }

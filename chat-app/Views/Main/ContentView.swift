@@ -11,12 +11,18 @@ struct ContentView: View {
     
     @EnvironmentObject var vm: AuthenticationViewModel
     @AppStorage("isSignedIn") var isSignedIn: Bool = false
+    @AppStorage("isCompletedSetup") var isCompletedSetup: Bool = false
 
     var body: some View {
         Group {
             if isSignedIn {
-                MainView()
-                    .environmentObject(vm)
+                if isCompletedSetup {
+                    MainView()
+                        .environmentObject(vm)
+                } else {
+                    SetupProfileView()
+                        .environmentObject(vm)
+                }
             } else {
                 LoginView()
                     .environmentObject(vm)
