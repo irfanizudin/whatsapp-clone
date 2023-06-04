@@ -9,32 +9,30 @@ import SwiftUI
 
 struct MainView: View {
     
+    @StateObject var vmMain = MainViewModel()
     @EnvironmentObject var vm: AuthenticationViewModel
     
     var body: some View {
         VStack {
-            Text(vm.user?.fullName ?? "")
-            
-            Button {
-                vm.signOut()
-            } label: {
-                Text("Sign Out")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(.red)
-                    .cornerRadius(10)
+            TabView(selection: $vmMain.tabSelected) {
+                
+                ChatListView()
+                    .environmentObject(vm)
+                    .tag(0)
+                    .tabItem {
+                        Image(systemName: "message")
+                        Text("Chats")
+                    }
+                
+                Text("Settings")
+                    .tag(1)
+                    .tabItem {
+                        Image(systemName: "gear")
+                        Text("Settings")
+                    }
                 
             }
-            .padding(.top, 10)
-            
         }
-        .padding(.horizontal, 20)
-        .onAppear {
-            vm.fetchUserData()
-        }
-        
     }
 }
 
