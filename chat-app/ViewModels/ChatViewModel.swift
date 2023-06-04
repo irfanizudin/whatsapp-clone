@@ -6,16 +6,45 @@
 //
 
 import Foundation
+import Firebase
+import FirebaseFirestore
 
 class ChatViewModel: ObservableObject {
     @Published var showContactList: Bool = false
-    @Published var contacts: [Contact] = [
-        Contact(imageURL: "https://firebasestorage.googleapis.com:443/v0/b/chat-app-41388.appspot.com/o/B1458DD0-44B1-473D-956A-2DB243DE225C?alt=media&token=db87fe33-628d-4001-8c04-8493fa0a60ed"
-, size: 50, username: "irfanizudin", fullName: "Irfan Izudin"),
-        Contact(imageURL: "https://firebasestorage.googleapis.com:443/v0/b/chat-app-41388.appspot.com/o/B1458DD0-44B1-473D-956A-2DB243DE225C?alt=media&token=db87fe33-628d-4001-8c04-8493fa0a60ed"
-, size: 50, username: "irfanizudin", fullName: "Irfan Izudin"),
-        Contact(imageURL: "https://firebasestorage.googleapis.com:443/v0/b/chat-app-41388.appspot.com/o/B1458DD0-44B1-473D-956A-2DB243DE225C?alt=media&token=db87fe33-628d-4001-8c04-8493fa0a60ed"
-, size: 50, username: "irfanizudin", fullName: "Irfan Izudin"),
-    ]
+    @Published var contacts: [Contact] = []
     @Published var usernameText: String = ""
+    @Published var isLoading: Bool = false
+    @Published var isContactListEmptyState: Bool = true
+    
+    func findContact() {
+        
+        self.contacts.removeAll()
+        
+        self.isLoading = true
+        self.isContactListEmptyState = false
+        
+        Firestore.firestore().collection("Users").whereField("username", isEqualTo: usernameText)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print("Failed to get document: ", error.localizedDescription)
+                    
+                } else {
+                    self.isLoading = false
+
+                    for document in snapshot!.documents {
+                        let document = document.data()
+                        
+                        let imageURL = document["photoURL"] as? String
+                        let username = document["username"] as? String
+                        let fullName = document["fullName"] as? String
+                        let contact = Contact(imageURL: imageURL, size: 40, username: username, fullName: fullName)
+                        self.contacts.append(contact)
+                        print(self.contacts)
+                    }
+
+                }
+                
+            }
+    }
+    
 }

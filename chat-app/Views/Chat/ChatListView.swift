@@ -16,6 +16,9 @@ struct ChatListView: View {
             VStack {
                 
             }
+            .onAppear {
+                
+            }
             .navigationTitle("Chats")
             .toolbar(content: {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -38,7 +41,10 @@ struct ChatListView: View {
                     
                 }
             })
-            .sheet(isPresented: $vmChat.showContactList) {
+            .sheet(isPresented: $vmChat.showContactList, onDismiss: {
+                vmChat.usernameText = ""
+                vmChat.isContactListEmptyState = true
+            }) {
                 ContactListView()
                     .environmentObject(vmChat)
             }

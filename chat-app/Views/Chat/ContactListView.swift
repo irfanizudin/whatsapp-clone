@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContactListView: View {
-
+    
     @EnvironmentObject var vmChat: ChatViewModel
     
     @Environment(\.dismiss) var dismiss
@@ -19,22 +19,48 @@ struct ContactListView: View {
                 
                 HStack {
                     Image(systemName: "magnifyingglass")
-                    TextField("Find a friends by username", text: $vmChat.usernameText)
+                    TextField("Start a chat by type their username", text: $vmChat.usernameText, onCommit: {
+                        vmChat.findContact()
+                    })
                         .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
+                        .textInputAutocapitalization(.never)
+                        
                 }
                 .padding(10)
                 .overlay {
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(.gray, lineWidth: 0.5)
                 }
-              
-                ScrollView {
-                    ForEach(vmChat.contacts, id: \.username) { contact in
-                        ContactCardVIew(contact: contact)
+                .padding(.bottom)
+                
+                if vmChat.isLoading {
+                    ProgressView()
+                        .frame(maxHeight: .infinity)
+                } else {
+                    if vmChat.isContactListEmptyState {
+                        VStack {
+                            EmptyView()
+                        }
+                        .frame(maxHeight: .infinity)
+
+                    } else if vmChat.contacts.isEmpty {
+                        VStack {
+                            Text("Username not found")
+                                .font(.title)
+                                .foregroundColor(.gray)
+                        }
+                        .frame(maxHeight: .infinity)
+                    } else {
+                        ScrollView {
+                            ForEach(vmChat.contacts, id: \.username) { contact in
+                                ContactCardVIew(contact: contact)
+                            }
+                        }
+
                     }
                 }
 
+                
             }
             .padding(.horizontal, 20)
             .navigationTitle("New Chat")
@@ -43,10 +69,12 @@ struct ContactListView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         dismiss()
+                        vmChat.usernameText = ""
+                        vmChat.isContactListEmptyState = true
                     } label: {
                         Image(systemName: "xmark.circle")
                     }
-
+                    
                 }
             }
         }
