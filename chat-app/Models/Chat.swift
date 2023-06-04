@@ -9,7 +9,14 @@ import Foundation
 
 struct Contact {
     let imageURL: String?
-    let size: CGFloat?
     let username: String?
     let fullName: String?
+}
+
+struct Chat {
+    let imageURL: String?
+    let username: String?
+    let lastMessage: String?
+    let isUserMessage: Bool?
+    let lastMessageDate: String?
 }

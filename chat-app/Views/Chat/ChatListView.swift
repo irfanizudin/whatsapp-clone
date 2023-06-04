@@ -14,8 +14,14 @@ struct ChatListView: View {
     var body: some View {
         NavigationView {
             VStack {
+                ScrollView {
+                    ForEach(vmChat.chats, id: \.username) { chat in
+                        ChatCardView(chat: chat)
+                    }
+                }
                 
             }
+            .padding(.horizontal, 20)
             .onAppear {
                 
             }

@@ -14,14 +14,16 @@ struct ContactCardVIew: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                ImageProfileView(imageURL: contact?.imageURL ?? "", size: contact?.size ?? 0)
+                ImageProfileView(imageURL: contact?.imageURL ?? "", size: 60)
                 VStack(alignment: .leading) {
                     Text(contact?.username ?? "")
-                        .bold()
+                        .font(.headline.bold())
+                        .padding(.bottom, 1)
                     Text(contact?.fullName ?? "")
-                        .font(.caption)
+                        .font(.callout)
                         .foregroundColor(.gray)
                 }
+                .padding(.leading, 10)
             }
             Divider()
         }
@@ -33,11 +35,10 @@ struct ContactCardVIew: View {
 struct ContactCardVIew_Previews: PreviewProvider {
 
     static var previews: some View {
-        let imageURL: String = "https://firebasestorage.googleapis.com:443/v0/b/chat-app-41388.appspot.com/o/B1458DD0-44B1-473D-956A-2DB243DE225C?alt=media&token=db87fe33-628d-4001-8c04-8493fa0a60ed"
-        let size: CGFloat = 50
+        let imageURL: String = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
         let username = "irfanizudin"
         let fullName = "Irfan Izudin"
 
-        ContactCardVIew(contact: Contact(imageURL: imageURL, size: size, username: username, fullName: fullName))
+        ContactCardVIew(contact: Contact(imageURL: imageURL, username: username, fullName: fullName))
     }
 }
