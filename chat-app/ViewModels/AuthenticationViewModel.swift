@@ -182,16 +182,55 @@ class AuthenticationViewModel: ObservableObject {
             return
         }
         
-        self.saveImageToStorage { result in
+        
+        self.isUsernameExist { result in
             switch result {
-            case .success(let photo):
-                self.saveSetupProfileToFirestore(photoURL: photo.photoURL ?? "", photoName: photo.photoName ?? "", username: self.usernameText)
-
+            case .success(let isExist):
+                if isExist {
+                    print("username exist")
+                    
+                } else {
+                    
+                    print("username not exist")
+                    self.saveImageToStorage { result in
+                        switch result {
+                        case .success(let photo):
+                            self.saveSetupProfileToFirestore(photoURL: photo.photoURL ?? "", photoName: photo.photoName ?? "", username: self.usernameText)
+                            
+                        case .failure(let error):
+                            print(error)
+                        }
+                    }
+                    
+                }
             case .failure(let error):
-                print(error)
+                print(error.localizedDescription)
             }
         }
+             
 
+    }
+    
+    func isUsernameExist(completion: @escaping(Result<Bool, Error>) -> () )  {
+        
+        var isExistArr: [Bool] = []
+
+        Firestore.firestore().collection("Users").whereField("username", isEqualTo: usernameText)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print("Failed to get document: ", error.localizedDescription)
+                    
+                } else {
+                    
+                    for document in snapshot!.documents {
+                        print("username exist:", document.exists)
+                        isExistArr.append(document.exists)
+                    }
+                    completion(.success(isExistArr.first ?? false))
+                }
+                
+            }
+        
     }
 
     func saveImageToStorage(completion: @escaping(Result<UpdatePhoto, Error>) -> ()) {

@@ -39,7 +39,6 @@ class ChatViewModel: ObservableObject {
                         let fullName = document["fullName"] as? String
                         let contact = Contact(imageURL: imageURL, size: 40, username: username, fullName: fullName)
                         self.contacts.append(contact)
-                        print(self.contacts)
                     }
 
                 }
