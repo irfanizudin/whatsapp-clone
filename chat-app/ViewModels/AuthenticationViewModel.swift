@@ -23,6 +23,8 @@ class AuthenticationViewModel: ObservableObject {
     @Published var showSetupProfileAlert: Bool = false
     @Published var alertMessage: String = ""
     @Published var isShowLoading: Bool = false
+    @Published var nonce: String = ""
+
 
 
     @AppStorage("isSignedIn") var isSignedIn: Bool = false
@@ -129,7 +131,7 @@ class AuthenticationViewModel: ObservableObject {
         
     }
     
-    func fetchUserData() {
+    func fetchUserData(completion: @escaping(Result<UserModel, Error>) -> ()) {
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
         Firestore.firestore().collection("Users").document(userId).addSnapshotListener { snapshot, error in
@@ -148,8 +150,8 @@ class AuthenticationViewModel: ObservableObject {
             let photoName = document["photoName"] as? String ?? ""
             
             let user = UserModel(uid: uid, fullName: fullName, username: username, email: email, photoURL: photoURL, photoName: photoName)
-            self.user = user
-            
+            completion(.success(user))
+            print("Successfully fetch data")
             
         }
         
@@ -162,6 +164,7 @@ class AuthenticationViewModel: ObservableObject {
             self.isSignedIn = false
             self.isCompletedSetup = false
             self.image = UIImage(named: "")
+            self.usernameText = ""
 
         } catch {
             print(error.localizedDescription)
@@ -193,36 +196,61 @@ class AuthenticationViewModel: ObservableObject {
 
     func saveImageToStorage(completion: @escaping(Result<UpdatePhoto, Error>) -> ()) {
         
-        self.deleteImageFromStorage()
+        guard let userId = Auth.auth().currentUser?.uid else { return }
         
-        self.isShowLoading = true
-        let filename = UUID().uuidString
-        let ref = Storage.storage().reference(withPath: filename)
-        
-        guard let imageData = self.image?.jpegData(compressionQuality: 0.5) else {
-            print("Image not found")
-            return
-            
-        }
-        
-        ref.putData(imageData) { metadata, error in
+        Firestore.firestore().collection("Users").document(userId).getDocument { document, error in
             if let error = error {
-                print("Failed to save image: ", error.localizedDescription)
+                print("Failed to get document :", error.localizedDescription)
                 return
             }
             
-            ref.downloadURL { url, error in
-                if let error = error {
-                    print("Failed to download URL: ", error.localizedDescription)
-                    return
-                }
+            guard let document = document?.data() else { return }
+            let photoURL = document["photoURL"] as? String ?? ""
+            let photoName = document["photoName"] as? String ?? ""
 
-                print("Successfully download photo")
-                let photo = UpdatePhoto(photoURL: url?.absoluteString ?? "", photoName: filename)
+            
+            if !photoURL.isEmpty && self.image == nil {
+                print("photo url exist and not change image")
+                let photo = UpdatePhoto(photoURL: photoURL, photoName: photoName)
                 completion(.success(photo))
                 
+            } else {
+                print("photo url empty or change image")
+                
+                self.deleteImageFromStorage()
+                
+                self.isShowLoading = true
+                let filename = UUID().uuidString
+                let ref = Storage.storage().reference(withPath: filename)
+                
+                guard let imageData = self.image?.jpegData(compressionQuality: 0.5) else {
+                    print("Image not found")
+                    return
+                    
+                }
+                
+                ref.putData(imageData) { metadata, error in
+                    if let error = error {
+                        print("Failed to save image: ", error.localizedDescription)
+                        return
+                    }
+                    
+                    ref.downloadURL { url, error in
+                        if let error = error {
+                            print("Failed to download URL: ", error.localizedDescription)
+                            return
+                        }
+
+                        print("Successfully download photo")
+                        let photo = UpdatePhoto(photoURL: url?.absoluteString ?? "", photoName: filename)
+                        completion(.success(photo))
+                        
+                    }
+                }
+
             }
         }
+        
         
     }
     
@@ -295,5 +323,63 @@ class AuthenticationViewModel: ObservableObject {
         }
         
     }
+    
+    func signInWithAppleRequest(request: ASAuthorizationAppleIDRequest) {
+        nonce = randomNonceString()
+        request.requestedScopes = [.fullName, .email]
+        request.nonce = sha256(nonce)
+    }
+
+    func signInWithAppleCompletion(result: Result<ASAuthorization, Error>) {
+        switch result {
+        case .success(let user):
+            
+            guard let credential = user.credential as? ASAuthorizationAppleIDCredential else {
+                print("error to get credential")
+                return
+            }
+            
+            authenticateAppleSignIn(credential: credential)
+        case .failure(let error):
+            print(error.localizedDescription)
+        }
+    }
+    
+    func authenticateAppleSignIn(credential: ASAuthorizationAppleIDCredential) {
+        
+        guard let token = credential.identityToken else {
+            print("error get token")
+            return
+        }
+        
+        guard let tokenString = String(data: token, encoding: .utf8) else {
+            print("error convert token to string")
+            return
+        }
+        
+        let appleCredential = OAuthProvider.credential(withProviderID: "apple.com", idToken: tokenString, rawNonce: nonce)
+        
+        
+        Auth.auth().signIn(with: appleCredential) { result, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            print("Login Apple success")
+            self.isSignedIn = true
+            
+            let uid = credential.user
+            let firstName = credential.fullName?.givenName ?? ""
+            let lastName = credential.fullName?.familyName ?? ""
+            let fullName = "\(firstName) \(lastName)"
+            let email = credential.email
+            
+            let user = UserModel(uid: uid, fullName: fullName, username: "", email: email, photoURL: "", photoName: "")
+            
+            self.saveUserSignIn(user: user)
+        }
+        
+    }
+
     
 }

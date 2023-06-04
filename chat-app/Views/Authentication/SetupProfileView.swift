@@ -79,12 +79,12 @@ struct SetupProfileView: View {
                     .foregroundColor(.white)
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(vm.image == nil || vm.usernameText.isEmpty ? .gray : .blue)
+                    .background(vm.user?.photoURL == nil || vm.usernameText.isEmpty ? .gray : .blue)
                     .cornerRadius(10)
                 
             }
             .padding(.top, 200)
-            .disabled(vm.image == nil || vm.usernameText.isEmpty ? true : false)
+            .disabled(vm.user?.photoURL == nil || vm.usernameText.isEmpty ? true : false)
 
             Button {
                 vm.signOut()
@@ -103,7 +103,17 @@ struct SetupProfileView: View {
         .frame(maxHeight: .infinity)
         .padding(.horizontal, 20)
         .onAppear {
-            vm.fetchUserData()
+            vm.fetchUserData { result in
+                switch result {
+                case .success(let user):
+                    vm.user = user
+                    vm.usernameText = vm.user?.username ?? ""
+                    vm.image = UIImage(named: vm.user?.photoName ?? "")
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+                
+            }
         }
         .sheet(isPresented: $vm.showImagePicker) {
             ImagePickerView(image: $vm.image)

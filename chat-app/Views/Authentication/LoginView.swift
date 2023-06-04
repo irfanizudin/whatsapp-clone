@@ -36,66 +36,13 @@ struct LoginView: View {
                     .padding(.bottom)
                 
                 VStack {
-                    HStack {
-                       Image("google-logo")
-                            .resizable()
-                            .renderingMode(.template)
-                            .scaledToFit()
-                            .frame(width: 25, height: 25)
-                            .padding(.trailing)
-                        
-                        Text("Continue with Google")
-                            .font(.callout.bold())
-                            .foregroundColor(.black)
-                            
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background {
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .fill(.white)
-                    }
-                    .overlay {
-                        GoogleSignInButton()
-                            .onTapGesture {
-                                vm.signInWithGoogle()
-                            }
-                            .blendMode(.overlay)
-                    }
+                    GoogleButtonView()
+                        .environmentObject(vm)
                     
-                    HStack {
-                       Image(systemName: "apple.logo")
-                            .resizable()
-                            .renderingMode(.template)
-                            .scaledToFit()
-                            .frame(width: 25, height: 25)
-                            .padding(.trailing)
-
-                        
-                        Text("Continue with Apple")
-                            .font(.callout.bold())
-                    }
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background {
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .fill(.black)
-                    }
-                    .overlay {
-                        SignInWithAppleButton { request in
-                            
-//                            vm.signInWithAppleRequest(request: request)
-                            
-                        } onCompletion: { result in
-                            
-//                            vm.signInWithAppleCompletion(result: result)
-                        }
-                        .signInWithAppleButtonStyle(.white)
-                        .blendMode(.overlay)
-                    }
-                    .padding(.top, 10)
-                    .padding(.bottom, 50)
+                    AppleButtonView()
+                        .environmentObject(vm)
+                        .padding(.top, 10)
+                        .padding(.bottom, 50)
                 }
                 .padding(.horizontal, 20)
             }
