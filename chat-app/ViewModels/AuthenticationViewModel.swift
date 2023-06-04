@@ -150,6 +150,7 @@ class AuthenticationViewModel: ObservableObject {
             let photoName = document["photoName"] as? String ?? ""
             
             let user = UserModel(uid: uid, fullName: fullName, username: username, email: email, photoURL: photoURL, photoName: photoName)
+            self.user = user
             completion(.success(user))
             print("Successfully fetch data")
             
@@ -188,7 +189,9 @@ class AuthenticationViewModel: ObservableObject {
             case .success(let isExist):
                 if isExist {
                     print("username exist")
-                    
+                    self.showSetupProfileAlert = true
+                    self.alertMessage = "Username is already taken"
+
                 } else {
                     
                     print("username not exist")
@@ -223,7 +226,6 @@ class AuthenticationViewModel: ObservableObject {
                 } else {
                     
                     for document in snapshot!.documents {
-                        print("username exist:", document.exists)
                         isExistArr.append(document.exists)
                     }
                     completion(.success(isExistArr.first ?? false))

@@ -36,18 +36,7 @@ struct SetupProfileView: View {
                             .frame(width: 100, height: 100)
                             .clipShape(Circle())
                     } else {
-                        AsyncImage(url: URL(string: vm.user?.photoURL ?? "")) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 100, height: 100)
-                                .clipShape(Circle())
-                        } placeholder: {
-                            ProgressView()
-                                .frame(width: 100, height: 100)
-                                .clipShape(Circle())
-                        }
-                        
+                        ImageProfileView(imageURL: vm.user?.photoURL ?? "", size: 100)
                     }
 
                 }

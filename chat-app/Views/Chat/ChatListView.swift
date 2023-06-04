@@ -31,15 +31,6 @@ struct ChatListView: View {
                     }
                     
                 }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        vmAuth.signOut()
-                    } label: {
-                        Image(systemName: "rectangle.portrait.and.arrow.right")
-                            .foregroundColor(Color(Pallete.Red.rawValue))
-                    }
-                    
-                }
             })
             .sheet(isPresented: $vmChat.showContactList, onDismiss: {
                 vmChat.usernameText = ""

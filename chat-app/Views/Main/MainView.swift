@@ -24,11 +24,12 @@ struct MainView: View {
                         Text("Chats")
                     }
                 
-                Text("Settings")
+                ProfileView()
+                    .environmentObject(vm)
                     .tag(1)
                     .tabItem {
-                        Image(systemName: "gear")
-                        Text("Settings")
+                        Image(systemName: "person")
+                        Text("Profile")
                     }
                 
             }
