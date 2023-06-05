@@ -49,12 +49,55 @@ struct ChatMessageVIew: View {
                 
             VStack {
                 ScrollView {
-                    ForEach(0..<10) { _ in
-                        Text("Chat Message")
-                            .font(.title)
-                            .padding()
-                            .frame(maxWidth: .infinity)
+//                    ForEach(vmChat.chats, id: \.documentId) { chat in
+//                        Text(chat.text ?? "Hai brodin")
+//                    }
+                    VStack {
+                        ForEach(vmChat.chats, id: \.documentId) { chat in
+                            if chat.fromId == vmChat.currentUserId {
+                                HStack {
+                                    Spacer()
+                                    VStack(alignment: .trailing) {
+                                        Text(chat.text ?? "")
+                                            .foregroundColor(.black)
+                                        
+                                        Text("11:33 AM")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(.top, -5)
+                                    }
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 12)
+                                    .background(Color(Pallete.BubbleGreen.rawValue))
+                                    .cornerRadius(10)
+                                }
+                                .padding(.vertical, 2)
+
+                            } else {
+                                HStack {
+                                    VStack(alignment: .trailing) {
+                                        Text(chat.text ?? "")
+                                            .foregroundColor(.black)
+                                        
+                                        Text("11:33 AM")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(.top, -5)
+                                    }
+                                    .padding(.vertical, 10)
+                                    .padding(.horizontal, 14)
+                                    .background(.white)
+                                    .cornerRadius(10)
+                                    Spacer()
+                                }
+                                .padding(.vertical, 2)
+
+                            }
+                            
+                        }
                     }
+                    .padding()
+
                 }
 
             }
@@ -86,13 +129,18 @@ struct ChatMessageVIew: View {
                             .stroke(Color.gray, lineWidth: 0.5)
                     }
             
-                Image(systemName: "paperplane.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .rotationEffect(.degrees(45))
-                    .frame(width: 25)
-                    .foregroundColor(.blue)
-                    .padding(.leading, 10)
+                Button {
+                    vmChat.createNewMessage(recipientUser: recipientUser)
+                } label: {
+                    Image(systemName: "paperplane.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .rotationEffect(.degrees(45))
+                        .frame(width: 25)
+                        .foregroundColor(.blue)
+                        .padding(.leading, 10)
+                }
+
 
             }
             .padding(.vertical, 10)
@@ -103,6 +151,10 @@ struct ChatMessageVIew: View {
             
         }
         .toolbar(.hidden, for: .navigationBar)
+        .onAppear {
+            vmChat.fetchChatMessages(recipientUser: recipientUser)
+            vmChat.getCurrentUserId()
+        }
     }
 }
 

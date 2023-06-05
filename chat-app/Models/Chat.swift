@@ -22,9 +22,18 @@ struct Contact {
 }
 
 struct Chat {
-    let imageURL: String?
-    let username: String?
-    let lastMessage: String?
-    let isUserMessage: Bool?
-    let lastMessageDate: String?
+    let documentId: String?
+    let fromId: String?
+    let toId: String?
+    let text: String?
+    let createdAt: Date?
+    
+    init(documentId: String, data: [String: Any]) {
+        self.documentId = documentId
+        self.fromId = data["fromId"] as? String
+        self.toId = data["toId"] as? String
+        self.text = data["text"] as? String
+        self.createdAt = data["createdAt"] as? Date
+    }
+
 }

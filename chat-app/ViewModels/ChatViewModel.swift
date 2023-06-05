@@ -22,10 +22,7 @@ class ChatViewModel: ObservableObject {
     @Published var showChatAlert: Bool = false
     @Published var chatAlertMessage: String = ""
     
-    @Published var chats: [Chat] = [
-        Chat(imageURL: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80", username: "chika", lastMessage: "Hi What's up?", isUserMessage: false, lastMessageDate: "Today"),
-        Chat(imageURL: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80", username: "james", lastMessage: "I'm busy right now", isUserMessage: true, lastMessageDate: "Yesterday"),
-    ]
+    @Published var chats: [Chat] = []
     
     func getCurrentUserId() {
         self.currentUserId = Auth.auth().currentUser?.uid ?? ""
@@ -60,29 +57,65 @@ class ChatViewModel: ObservableObject {
             }
     }
     
-    func createNewMessage(toUserId: String, chat: Chat) {
+    func createNewMessage(recipientUser: Contact) {
         
-        guard let userId = Auth.auth().currentUser?.uid else { return }
+        guard let fromId = Auth.auth().currentUser?.uid,
+              let toId = recipientUser.documentId
+        else { return }
+        
 
         let data: [String: Any] = [
-            "toUserId": toUserId,
-            "photoURL": chat.imageURL ?? "",
-            "username": chat.username ?? "",
-            "lastMessage": "",
-            "isUserMessage": "",
-            "lastMessageDate": "",
+            "fromId": fromId,
+            "toId": toId,
+            "text": chatText,
             "createdAt": Timestamp(date: Date()),
-            "updatedAt": Timestamp(date: Date())
         ]
 
-        Firestore.firestore().collection("Users").document(userId).collection("Messages").document(toUserId).setData(data) { error in
+        Firestore.firestore().collection("Messages").document(fromId).collection(toId).document().setData(data) { error in
             if let error = error {
-                print("Failed to create new message: ", error.localizedDescription)
+                print("Failed to send message from currenUser: ", error.localizedDescription)
             } else {
-                print("Successfully create new message")
+                print("Successfully current user send message")
             }
         }
         
+        Firestore.firestore().collection("Messages").document(toId).collection(fromId).document().setData(data) { error in
+            if let error = error {
+                print("Failed to send message from recipient: ", error.localizedDescription)
+            } else {
+                print("Successfully recipient send message")
+            }
+
+        }
+        
+        chatText = ""
+        
+    }
+    
+    func fetchChatMessages(recipientUser: Contact) {
+        
+        guard let fromId = Auth.auth().currentUser?.uid,
+              let toId = recipientUser.documentId
+        else { return }
+
+        Firestore.firestore().collection("Messages").document(fromId).collection(toId).order(by: "createdAt").addSnapshotListener { snapshot, error in
+            if let error = error {
+                print("Failed to fetch chat messages: ", error.localizedDescription)
+            } else {
+                
+                snapshot?.documentChanges.forEach({ change in
+                    if change.type == .added {
+                        let documentId = change.document.documentID
+                        let data = change.document.data()
+                        let chat = Chat(documentId: documentId, data: data)
+                        self.chats.append(chat)
+                    }
+                })
+                print(self.chats)
+                print("Successfully fetch chat messages")
+                
+            }
+        }
     }
     
 }
