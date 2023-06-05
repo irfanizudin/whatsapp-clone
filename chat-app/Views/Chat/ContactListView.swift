@@ -13,6 +13,8 @@ struct ContactListView: View {
     
     @Environment(\.dismiss) var dismiss
     
+    let didSelectUser: (Contact) -> ()
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -54,7 +56,15 @@ struct ContactListView: View {
                         ScrollView {
                             ForEach(vmChat.contacts, id: \.username) { contact in
                                 Button {
-                                    dismiss()
+                                    if contact.documentId == vmChat.currentUserId {
+                                        print("You can not chat with yourself")
+                                        vmChat.showChatAlert = true
+                                        vmChat.chatAlertMessage = "You can't chat with yourself"
+                                    } else {
+                                        dismiss()
+                                        vmChat.moveToChatMessage = true
+                                        didSelectUser(contact)
+                                    }
                                 } label: {
                                     ContactCardVIew(contact: contact)
 
@@ -83,13 +93,20 @@ struct ContactListView: View {
                     
                 }
             }
+            .onAppear {
+                vmChat.getCurrentUserId()
+            }
+            .alert(vmChat.chatAlertMessage, isPresented: $vmChat.showChatAlert) {
+                Button("OK") {
+                }
+            }
         }
     }
 }
 
 struct ContactListView_Previews: PreviewProvider {
     static var previews: some View {
-        ContactListView()
+        ContactListView(didSelectUser: { _ in })
             .environmentObject(ChatViewModel())
     }
 }

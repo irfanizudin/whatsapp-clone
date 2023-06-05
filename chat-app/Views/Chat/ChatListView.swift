@@ -14,16 +14,26 @@ struct ChatListView: View {
     var body: some View {
         VStack {
             ScrollView {
-                ForEach(vmChat.chats, id: \.username) { chat in
-                    NavigationLink {
-                        ChatMessageVIew()
-                            .environmentObject(vmChat)
-                    } label: {
-                        ChatCardView(chat: chat)
-                    }
-                    
-                }
+//                ForEach(vmChat.chats, id: \.username) { chat in
+//                    NavigationLink {
+//                        ChatMessageVIew(recipientUser: vmChat.recipientUser)
+//                            .environmentObject(vmChat)
+//                    } label: {
+//                        ChatCardView(chat: chat)
+//                    }
+//
+//                }
             }
+            
+            NavigationLink(isActive: $vmChat.moveToChatMessage) {
+                if let recipientUser = vmChat.recipientUser {
+                    ChatMessageVIew(recipientUser: recipientUser)
+                        .environmentObject(vmChat)
+                }
+            } label: {
+                EmptyView()
+            }
+
             
         }
         .padding(.horizontal, 20)
@@ -34,8 +44,10 @@ struct ChatListView: View {
             vmChat.usernameText = ""
             vmChat.isContactListEmptyState = true
         }) {
-            ContactListView()
-                .environmentObject(vmChat)
+            ContactListView(didSelectUser: { contact in
+                vmChat.recipientUser = contact
+            })
+            .environmentObject(vmChat)
         }
     }
     

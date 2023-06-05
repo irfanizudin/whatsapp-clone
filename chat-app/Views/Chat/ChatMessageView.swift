@@ -11,6 +11,8 @@ struct ChatMessageVIew: View {
     @EnvironmentObject var vmChat: ChatViewModel
     @Environment(\.dismiss) var dismiss
     
+    let recipientUser: Contact
+    
     var body: some View {
         VStack(spacing: 0) {
             
@@ -25,9 +27,9 @@ struct ChatMessageVIew: View {
                         dismiss()
                     }
                 
-                ImageProfileView(imageURL: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80", size: 50)
+                ImageProfileView(imageURL: recipientUser.imageURL ?? "", size: 50)
             
-                Text("chika")
+                Text(recipientUser.username ?? "")
                     .font(.headline.bold())
                     .padding(.leading, 10)
                 
@@ -106,8 +108,18 @@ struct ChatMessageVIew: View {
 
 struct ChatMessageVIew_Previews: PreviewProvider {
     static var previews: some View {
+        let imageURL: String = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
+        let username = "irfanizudin"
+        let fullName = "Irfan Izudin"
+
+        let data: [String: Any] = [
+            "photoURL": imageURL,
+            "username": username,
+            "fullName": fullName
+        ]
+
         NavigationView {
-            ChatMessageVIew()
+            ChatMessageVIew(recipientUser: Contact(documentId: "", data: data))
                 .environmentObject(ChatViewModel())
         }
     }

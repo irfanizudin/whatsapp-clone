@@ -264,13 +264,14 @@ class AuthenticationViewModel: ObservableObject {
                 let filename = UUID().uuidString
                 let ref = Storage.storage().reference(withPath: filename)
                 
-                guard let imageData = self.image?.jpegData(compressionQuality: 0.5) else {
+                guard let imageData = self.image?.jpegData(compressionQuality: 0.8) else {
                     print("Image not found")
                     return
                     
                 }
-                
-                ref.putData(imageData) { metadata, error in
+                let metadata = StorageMetadata()
+                metadata.contentType = "image/jpeg"
+                ref.putData(imageData, metadata: metadata) { metadata, error in
                     if let error = error {
                         print("Failed to save image: ", error.localizedDescription)
                         return

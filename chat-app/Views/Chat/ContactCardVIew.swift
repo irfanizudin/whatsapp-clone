@@ -41,6 +41,12 @@ struct ContactCardVIew_Previews: PreviewProvider {
         let username = "irfanizudin"
         let fullName = "Irfan Izudin"
 
-        ContactCardVIew(contact: Contact(imageURL: imageURL, username: username, fullName: fullName))
+        let data: [String: Any] = [
+            "photoURL": imageURL,
+            "username": username,
+            "fullName": fullName
+        ]
+
+        ContactCardVIew(contact: Contact(documentId: "", data: data))
     }
 }

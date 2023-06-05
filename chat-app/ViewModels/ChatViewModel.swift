@@ -16,11 +16,20 @@ class ChatViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isContactListEmptyState: Bool = true
     @Published var chatText: String = ""
+    @Published var moveToChatMessage: Bool = false
+    @Published var recipientUser: Contact?
+    @Published var currentUserId: String = ""
+    @Published var showChatAlert: Bool = false
+    @Published var chatAlertMessage: String = ""
     
     @Published var chats: [Chat] = [
         Chat(imageURL: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80", username: "chika", lastMessage: "Hi What's up?", isUserMessage: false, lastMessageDate: "Today"),
         Chat(imageURL: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80", username: "james", lastMessage: "I'm busy right now", isUserMessage: true, lastMessageDate: "Yesterday"),
     ]
+    
+    func getCurrentUserId() {
+        self.currentUserId = Auth.auth().currentUser?.uid ?? ""
+    }
     
     func findContact() {
         
@@ -36,14 +45,13 @@ class ChatViewModel: ObservableObject {
                     
                 } else {
                     self.isLoading = false
-
+                    
+                    
                     for document in snapshot!.documents {
-                        let document = document.data()
-                        
-                        let imageURL = document["photoURL"] as? String
-                        let username = document["username"] as? String
-                        let fullName = document["fullName"] as? String
-                        let contact = Contact(imageURL: imageURL, username: username, fullName: fullName)
+                        let documentId = document.documentID
+                        let data = document.data()
+                    
+                        let contact = Contact(documentId: documentId, data: data)
                         self.contacts.append(contact)
                     }
 
