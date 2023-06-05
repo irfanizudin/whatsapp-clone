@@ -10,14 +10,15 @@ import SwiftUI
 struct MainView: View {
     
     @StateObject var vmMain = MainViewModel()
+    @StateObject var vmChat = ChatViewModel()
     @EnvironmentObject var vm: AuthenticationViewModel
     
     var body: some View {
-        VStack {
+        NavigationView {
             TabView(selection: $vmMain.tabSelected) {
                 
                 ChatListView()
-                    .environmentObject(vm)
+                    .environmentObject(vmChat)
                     .tag(0)
                     .tabItem {
                         Image(systemName: "message")
@@ -33,6 +34,22 @@ struct MainView: View {
                     }
                 
             }
+            .navigationTitle(vmMain.tabSelected == 0 ? "Chats" : "Profile")
+            .toolbar(content: {
+                if vmMain.tabSelected == 0 {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            vmChat.showContactList.toggle()
+                        } label: {
+                            Image(systemName: "square.and.pencil")
+                                .resizable()
+                                .scaledToFit()
+                        }
+                        
+                    }
+                }
+
+            })
         }
     }
 }

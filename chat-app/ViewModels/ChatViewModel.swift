@@ -15,6 +15,7 @@ class ChatViewModel: ObservableObject {
     @Published var usernameText: String = ""
     @Published var isLoading: Bool = false
     @Published var isContactListEmptyState: Bool = true
+    @Published var chatText: String = ""
     
     @Published var chats: [Chat] = [
         Chat(imageURL: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80", username: "chika", lastMessage: "Hi What's up?", isUserMessage: false, lastMessageDate: "Today"),
@@ -49,6 +50,31 @@ class ChatViewModel: ObservableObject {
                 }
                 
             }
+    }
+    
+    func createNewMessage(toUserId: String, chat: Chat) {
+        
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+
+        let data: [String: Any] = [
+            "toUserId": toUserId,
+            "photoURL": chat.imageURL ?? "",
+            "username": chat.username ?? "",
+            "lastMessage": "",
+            "isUserMessage": "",
+            "lastMessageDate": "",
+            "createdAt": Timestamp(date: Date()),
+            "updatedAt": Timestamp(date: Date())
+        ]
+
+        Firestore.firestore().collection("Users").document(userId).collection("Messages").document(toUserId).setData(data) { error in
+            if let error = error {
+                print("Failed to create new message: ", error.localizedDescription)
+            } else {
+                print("Successfully create new message")
+            }
+        }
+        
     }
     
 }

@@ -53,7 +53,13 @@ struct ContactListView: View {
                     } else {
                         ScrollView {
                             ForEach(vmChat.contacts, id: \.username) { contact in
-                                ContactCardVIew(contact: contact)
+                                Button {
+                                    dismiss()
+                                } label: {
+                                    ContactCardVIew(contact: contact)
+
+                                }
+
                             }
                         }
 

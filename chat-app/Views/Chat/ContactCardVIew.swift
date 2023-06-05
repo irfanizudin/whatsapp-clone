@@ -12,12 +12,13 @@ struct ContactCardVIew: View {
     let contact: Contact?
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 0) {
             HStack {
                 ImageProfileView(imageURL: contact?.imageURL ?? "", size: 60)
                 VStack(alignment: .leading) {
                     Text(contact?.username ?? "")
                         .font(.headline.bold())
+                        .foregroundColor(.black)
                         .padding(.bottom, 1)
                     Text(contact?.fullName ?? "")
                         .font(.callout)
@@ -25,6 +26,7 @@ struct ContactCardVIew: View {
                 }
                 .padding(.leading, 10)
             }
+            .padding(.vertical, 10)
             Divider()
         }
         .frame(maxWidth: .infinity, alignment: .leading)

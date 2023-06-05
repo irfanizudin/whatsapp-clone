@@ -39,6 +39,9 @@
 		2EF94AA52A2C2B1400C8E932 /* AppleButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF94AA42A2C2B1400C8E932 /* AppleButtonView.swift */; };
 		2EF94AA82A2CDEF700C8E932 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF94AA72A2CDEF700C8E932 /* ProfileView.swift */; };
 		2EF94AAA2A2CE66B00C8E932 /* ChatCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF94AA92A2CE66B00C8E932 /* ChatCardView.swift */; };
+		2EF94AAC2A2D817800C8E932 /* ChatMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF94AAB2A2D817800C8E932 /* ChatMessageView.swift */; };
+		2EF94AAE2A2DA27B00C8E932 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF94AAD2A2DA27B00C8E932 /* Navigation.swift */; };
+		2EF94AB02A2DA39A00C8E932 /* HideKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF94AAF2A2DA39A00C8E932 /* HideKeyboard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +75,9 @@
 		2EF94AA42A2C2B1400C8E932 /* AppleButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleButtonView.swift; sourceTree = "<group>"; };
 		2EF94AA72A2CDEF700C8E932 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		2EF94AA92A2CE66B00C8E932 /* ChatCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCardView.swift; sourceTree = "<group>"; };
+		2EF94AAB2A2D817800C8E932 /* ChatMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageView.swift; sourceTree = "<group>"; };
+		2EF94AAD2A2DA27B00C8E932 /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
+		2EF94AAF2A2DA39A00C8E932 /* HideKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideKeyboard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +142,8 @@
 			children = (
 				2E3ACF9329CEAAAB00CB746D /* Color.swift */,
 				2EF94A9F2A2C265300C8E932 /* AppleAuth.swift */,
+				2EF94AAD2A2DA27B00C8E932 /* Navigation.swift */,
+				2EF94AAF2A2DA39A00C8E932 /* HideKeyboard.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -210,6 +218,7 @@
 				2EF94A952A2B304500C8E932 /* ContactListView.swift */,
 				2EF94A972A2C111600C8E932 /* ContactCardVIew.swift */,
 				2EF94AA92A2CE66B00C8E932 /* ChatCardView.swift */,
+				2EF94AAB2A2D817800C8E932 /* ChatMessageView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -311,12 +320,15 @@
 				2E3ACF9629CEAD4100CB746D /* AuthenticationViewModel.swift in Sources */,
 				2EF94A762A2A315A00C8E932 /* ContentView.swift in Sources */,
 				2EF94A8D2A2B0ACD00C8E932 /* LoadingView.swift in Sources */,
+				2EF94AB02A2DA39A00C8E932 /* HideKeyboard.swift in Sources */,
 				2E3ACF8F29CEA82D00CB746D /* LoginView.swift in Sources */,
 				2EF94A8A2A2B002300C8E932 /* ImagePickerView.swift in Sources */,
+				2EF94AAE2A2DA27B00C8E932 /* Navigation.swift in Sources */,
 				2EF94A882A2AEC4800C8E932 /* SetupProfileView.swift in Sources */,
 				2EF94A9E2A2C24BE00C8E932 /* AppleSignInButton.swift in Sources */,
 				2EF94AA02A2C265300C8E932 /* AppleAuth.swift in Sources */,
 				2EF94A9A2A2C125000C8E932 /* ImageProfileView.swift in Sources */,
+				2EF94AAC2A2D817800C8E932 /* ChatMessageView.swift in Sources */,
 				2EF94AA32A2C2AA100C8E932 /* GoogleButtonView.swift in Sources */,
 				2EF94A812A2A3BEA00C8E932 /* User.swift in Sources */,
 				2EF94A942A2B2F2E00C8E932 /* ChatViewModel.swift in Sources */,

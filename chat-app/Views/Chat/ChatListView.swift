@@ -8,50 +8,42 @@
 import SwiftUI
 
 struct ChatListView: View {
-    @StateObject var vmChat = ChatViewModel()
-    @EnvironmentObject var vmAuth: AuthenticationViewModel
+    
+    @EnvironmentObject var vmChat: ChatViewModel
     
     var body: some View {
-        NavigationView {
-            VStack {
-                ScrollView {
-                    ForEach(vmChat.chats, id: \.username) { chat in
-                        ChatCardView(chat: chat)
-                    }
-                }
-                
-            }
-            .padding(.horizontal, 20)
-            .onAppear {
-                
-            }
-            .navigationTitle("Chats")
-            .toolbar(content: {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        vmChat.showContactList.toggle()
+        VStack {
+            ScrollView {
+                ForEach(vmChat.chats, id: \.username) { chat in
+                    NavigationLink {
+                        ChatMessageVIew()
+                            .environmentObject(vmChat)
                     } label: {
-                        Image(systemName: "square.and.pencil")
-                            .resizable()
-                            .scaledToFit()
+                        ChatCardView(chat: chat)
                     }
                     
                 }
-            })
-            .sheet(isPresented: $vmChat.showContactList, onDismiss: {
-                vmChat.usernameText = ""
-                vmChat.isContactListEmptyState = true
-            }) {
-                ContactListView()
-                    .environmentObject(vmChat)
             }
+            
+        }
+        .padding(.horizontal, 20)
+        .onAppear {
+            
+        }
+        .sheet(isPresented: $vmChat.showContactList, onDismiss: {
+            vmChat.usernameText = ""
+            vmChat.isContactListEmptyState = true
+        }) {
+            ContactListView()
+                .environmentObject(vmChat)
         }
     }
+    
 }
 
 struct ChatListView_Previews: PreviewProvider {
     static var previews: some View {
         ChatListView()
-            .environmentObject(AuthenticationViewModel())
+            .environmentObject(ChatViewModel())
     }
 }

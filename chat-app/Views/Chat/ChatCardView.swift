@@ -19,6 +19,7 @@ struct ChatCardView: View {
                 VStack(alignment: .leading) {
                     Text(chat.username ?? "")
                         .font(.headline.bold())
+                        .foregroundColor(.black)
                         .padding(.bottom, 1)
                     
                     HStack {
