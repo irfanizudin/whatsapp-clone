@@ -21,6 +21,7 @@ class ChatViewModel: ObservableObject {
     @Published var currentUserId: String = ""
     @Published var showChatAlert: Bool = false
     @Published var chatAlertMessage: String = ""
+    @Published var scrollToBottom: Bool = false
     
     @Published var chats: [Chat] = []
     
@@ -89,6 +90,7 @@ class ChatViewModel: ObservableObject {
         }
         
         chatText = ""
+        self.scrollToBottom.toggle()
         
     }
     
@@ -113,7 +115,9 @@ class ChatViewModel: ObservableObject {
                 })
                 print(self.chats)
                 print("Successfully fetch chat messages")
-                
+                DispatchQueue.main.async {
+                    self.scrollToBottom.toggle()
+                }
             }
         }
     }

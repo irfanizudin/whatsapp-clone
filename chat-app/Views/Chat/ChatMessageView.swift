@@ -49,57 +49,31 @@ struct ChatMessageVIew: View {
                 
             VStack {
                 ScrollView {
-//                    ForEach(vmChat.chats, id: \.documentId) { chat in
-//                        Text(chat.text ?? "Hai brodin")
-//                    }
-                    VStack {
-                        ForEach(vmChat.chats, id: \.documentId) { chat in
-                            if chat.fromId == vmChat.currentUserId {
-                                HStack {
-                                    Spacer()
-                                    VStack(alignment: .trailing) {
-                                        Text(chat.text ?? "")
-                                            .foregroundColor(.black)
-                                        
-                                        Text("11:33 AM")
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(.top, -5)
-                                    }
-                                    .padding(.vertical, 8)
-                                    .padding(.horizontal, 12)
-                                    .background(Color(Pallete.BubbleGreen.rawValue))
-                                    .cornerRadius(10)
-                                }
-                                .padding(.vertical, 2)
-
-                            } else {
-                                HStack {
-                                    VStack(alignment: .trailing) {
-                                        Text(chat.text ?? "")
-                                            .foregroundColor(.black)
-                                        
-                                        Text("11:33 AM")
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(.top, -5)
-                                    }
-                                    .padding(.vertical, 10)
-                                    .padding(.horizontal, 14)
-                                    .background(.white)
-                                    .cornerRadius(10)
-                                    Spacer()
-                                }
-                                .padding(.vertical, 2)
-
+                    ScrollViewReader { proxy in
+                        VStack {
+                            ForEach(vmChat.chats) { chat in
+                                ChatBubbleView(chat: chat)
+                                    .environmentObject(vmChat)
+                            }
+                            
+                            HStack {
+                                Spacer()
+                            }
+                            .id("bottom")
+                            
+                        }
+                        .onReceive(vmChat.$scrollToBottom) { _ in
+                            withAnimation(.easeOut(duration: 0.5)) {
+                                proxy.scrollTo("bottom", anchor: .bottom)
                             }
                             
                         }
+                        .padding()
+                        
                     }
-                    .padding()
-
+                    
                 }
-
+                
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(Pallete.BackgroundChat.rawValue))

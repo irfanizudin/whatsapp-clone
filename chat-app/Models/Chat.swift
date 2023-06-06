@@ -21,8 +21,9 @@ struct Contact {
     }
 }
 
-struct Chat {
-    let documentId: String?
+struct Chat: Identifiable {
+    var id: String { documentId }
+    let documentId: String
     let fromId: String?
     let toId: String?
     let text: String?
