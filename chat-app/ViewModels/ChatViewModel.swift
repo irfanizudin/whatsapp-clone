@@ -101,8 +101,6 @@ class ChatViewModel: ObservableObject {
     
     func fetchChatMessages(recipientUser: RecentChat) {
         
-        self.chats.removeAll()
-
         guard let fromId = Auth.auth().currentUser?.uid
         else { return }
 
@@ -117,6 +115,12 @@ class ChatViewModel: ObservableObject {
                     if change.type == .added {
                         let documentId = change.document.documentID
                         let data = change.document.data()
+                        
+                        if let index = self.chats.firstIndex(where: { chat in
+                            return chat.documentId == documentId
+                        }) {
+                            self.chats.remove(at: index)
+                        }
                         let chat = Chat(documentId: documentId, data: data)
                         self.chats.append(chat)
                     }
@@ -218,10 +222,16 @@ class ChatViewModel: ObservableObject {
             } else {
                 
                 snapshot?.documentChanges.forEach({ change in
-                        let documentId = change.document.documentID
-                        let data = change.document.data()
-                        let recentChat = RecentChat(documentId: documentId, data: data)
-                    self.recentChat.removeAll()
+                    let documentId = change.document.documentID
+                    let data = change.document.data()
+                    
+                    if let index = self.recentChat.firstIndex(where: { chat in
+                        return chat.documentId == documentId
+                    }) {
+                        self.recentChat.remove(at: index)
+                    }
+                    
+                    let recentChat = RecentChat(documentId: documentId, data: data)
                     self.recentChat.append(recentChat)
                     
                 })
