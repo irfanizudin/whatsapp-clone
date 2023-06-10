@@ -13,7 +13,7 @@ struct ContactListView: View {
     
     @Environment(\.dismiss) var dismiss
     
-    let didSelectUser: (Contact) -> ()
+    let didSelectUser: (RecentChat) -> ()
     
     var body: some View {
         NavigationView {

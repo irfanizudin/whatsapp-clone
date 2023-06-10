@@ -9,49 +9,60 @@ import SwiftUI
 
 struct ChatCardView: View {
     
+    @EnvironmentObject var vmChat: ChatViewModel
+    
+    let recentChat: RecentChat
+    
     var body: some View {
         VStack {
             HStack(alignment: .top) {
-                ImageProfileView(imageURL: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80", size: 70)
+                ImageProfileView(imageURL: recentChat.photoURL ?? "", size: 70)
                 
                 VStack(alignment: .leading) {
-                    Text("asolole")
+                    Text(recentChat.username ?? "")
                         .font(.headline.bold())
                         .foregroundColor(.black)
                         .padding(.bottom, 1)
                     
                     HStack {
-//                        if let isUserMessage = chat.isUserMessage, isUserMessage {
-//                            Image(systemName: "checkmark")
-//                                .resizable()
-//                                .scaledToFit()
-//                                .frame(width: 12, height: 12)
-//                                .foregroundColor(.gray)
-//                        }
-                        Text("Hi What's up?")
+                        if recentChat.fromId == vmChat.currentUserId {
+                            Image(systemName: "checkmark")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 12, height: 12)
+                                .foregroundColor(.gray)
+                        }
+                        Text(recentChat.text ?? "")
                             .font(.callout)
                             .foregroundColor(.gray)
+                            .lineLimit(2)
+                            .multilineTextAlignment(.leading)
                     }
                 }
                 .padding(.leading)
                 
                 Spacer()
                 
-                Text("Today")
-                    .font(.callout)
-                    .foregroundColor(.gray)
+                if let timestamp = recentChat.createdAt {
+                    Text(vmChat.convertBubbleChatTimeStamp(timestamp: timestamp))
+                        .font(.callout)
+                        .foregroundColor(.gray)
+                }
             }
             Divider()
         }
         .padding(.vertical, 5)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .onAppear {
+            vmChat.getCurrentUserId()
+        }
     }
 }
 
 struct ChatCardView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            ChatCardView()
+            ChatCardView(recentChat: RecentChat(documentId: "", data: ["data": 1 ]))
         }
     }
 }

@@ -11,19 +11,20 @@ import FirebaseFirestore
 
 class ChatViewModel: ObservableObject {
     @Published var showContactList: Bool = false
-    @Published var contacts: [Contact] = []
+    @Published var contacts: [RecentChat] = []
     @Published var usernameText: String = ""
     @Published var isLoading: Bool = false
     @Published var isContactListEmptyState: Bool = true
     @Published var chatText: String = ""
     @Published var moveToChatMessage: Bool = false
-    @Published var recipientUser: Contact?
+    @Published var recipientUser: RecentChat?
     @Published var currentUserId: String = ""
     @Published var showChatAlert: Bool = false
     @Published var chatAlertMessage: String = ""
     @Published var scrollToBottom: Bool = false
     
     @Published var chats: [Chat] = []
+    @Published var recentChat: [RecentChat] = []
     
     func getCurrentUserId() {
         self.currentUserId = Auth.auth().currentUser?.uid ?? ""
@@ -49,8 +50,9 @@ class ChatViewModel: ObservableObject {
                         let documentId = document.documentID
                         let data = document.data()
                     
-                        let contact = Contact(documentId: documentId, data: data)
+                        let contact = RecentChat(documentId: documentId, data: data)
                         self.contacts.append(contact)
+//                        print(self.contacts)
                     }
 
                 }
@@ -58,12 +60,12 @@ class ChatViewModel: ObservableObject {
             }
     }
     
-    func createNewMessage(recipientUser: Contact) {
+    func createNewMessage(recipientUser: RecentChat) {
         
-        guard let fromId = Auth.auth().currentUser?.uid,
-              let toId = recipientUser.documentId
+        guard let fromId = Auth.auth().currentUser?.uid
         else { return }
         
+        let toId = recipientUser.documentId
 
         let data: [String: Any] = [
             "fromId": fromId,
@@ -89,15 +91,21 @@ class ChatViewModel: ObservableObject {
 
         }
         
-        chatText = ""
-        self.scrollToBottom.toggle()
+        DispatchQueue.main.async {
+            self.chatText = ""
+            self.scrollToBottom.toggle()
+        }
+
+        saveRecentMessage(recipientUser: recipientUser)
         
     }
     
-    func fetchChatMessages(recipientUser: Contact) {
+    func fetchChatMessages(recipientUser: RecentChat) {
         
+        self.chats.removeAll()
+
         guard let fromId = Auth.auth().currentUser?.uid,
-              let toId = recipientUser.documentId
+              let toId = recipientUser.toId
         else { return }
 
         Firestore.firestore().collection("Messages").document(fromId).collection(toId).order(by: "createdAt").addSnapshotListener { snapshot, error in
@@ -113,7 +121,6 @@ class ChatViewModel: ObservableObject {
                         self.chats.append(chat)
                     }
                 })
-                print(self.chats)
                 print("Successfully fetch chat messages")
                 DispatchQueue.main.async {
                     self.scrollToBottom.toggle()
@@ -130,6 +137,65 @@ class ChatViewModel: ObservableObject {
         let formattedTime = dateFormatter.string(from: date)
 
         return formattedTime
+    }
+    
+    func saveRecentMessage(recipientUser: RecentChat) {
+        guard let fromId = Auth.auth().currentUser?.uid,
+              let toId = recipientUser.toId,
+              let photoURL = recipientUser.photoURL,
+              let username = recipientUser.username
+        else { return }
+
+        let data: [String: Any] = [
+            "fromId": fromId,
+            "toId": toId,
+            "text": chatText,
+            "createdAt": Timestamp(date: Date()),
+            "photoURL": photoURL,
+            "username": username
+        ]
+
+        Firestore.firestore().collection("RecentMessages").document(fromId).collection("Messages").document(toId).setData(data) { error in
+            if let error = error {
+                print("Failed to save recent message from currenUser: ", error.localizedDescription)
+            } else {
+                print("Successfully current user save recent message")
+            }
+        }
+        
+        Firestore.firestore().collection("RecentMessages").document(toId).collection("Messages").document(fromId).setData(data) { error in
+            if let error = error {
+                print("Failed to save recent message from recipient: ", error.localizedDescription)
+            } else {
+                print("Successfully recipient save recent message")
+            }
+
+        }
+
+    }
+    
+    func fetchRecentMessages() {
+        guard let fromId = Auth.auth().currentUser?.uid
+        else { return }
+
+        Firestore.firestore().collection("RecentMessages").document(fromId).collection("Messages").order(by: "createdAt").addSnapshotListener { snapshot, error in
+            if let error = error {
+                print("Failed to fetch recent chat messages: ", error.localizedDescription)
+            } else {
+                
+                snapshot?.documentChanges.forEach({ change in
+                        let documentId = change.document.documentID
+                        let data = change.document.data()
+                        let recentChat = RecentChat(documentId: documentId, data: data)
+                    self.recentChat.removeAll()
+                    self.recentChat.append(recentChat)
+                    
+                })
+//                print(self.recentChat)
+                print("Successfully fetch recent chat messages")
+            }
+        }
+
     }
     
 }

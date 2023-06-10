@@ -9,12 +9,12 @@ import SwiftUI
 
 struct ContactCardVIew: View {
         
-    let contact: Contact?
+    let contact: RecentChat?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
-                ImageProfileView(imageURL: contact?.imageURL ?? "", size: 60)
+                ImageProfileView(imageURL: contact?.photoURL ?? "", size: 60)
                 VStack(alignment: .leading) {
                     Text(contact?.username ?? "")
                         .font(.headline.bold())
@@ -47,6 +47,6 @@ struct ContactCardVIew_Previews: PreviewProvider {
             "fullName": fullName
         ]
 
-        ContactCardVIew(contact: Contact(documentId: "", data: data))
+        ContactCardVIew(contact: RecentChat(documentId: "", data: data))
     }
 }

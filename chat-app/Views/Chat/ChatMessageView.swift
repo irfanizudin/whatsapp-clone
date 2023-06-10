@@ -11,7 +11,8 @@ struct ChatMessageVIew: View {
     @EnvironmentObject var vmChat: ChatViewModel
     @Environment(\.dismiss) var dismiss
     
-    let recipientUser: Contact
+    let recipientUser: RecentChat
+//    let recentChat: RecentChat?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -27,7 +28,7 @@ struct ChatMessageVIew: View {
                         dismiss()
                     }
                 
-                ImageProfileView(imageURL: recipientUser.imageURL ?? "", size: 50)
+                ImageProfileView(imageURL: recipientUser.photoURL ?? "", size: 50)
             
                 Text(recipientUser.username ?? "")
                     .font(.headline.bold())
@@ -145,7 +146,7 @@ struct ChatMessageVIew_Previews: PreviewProvider {
         ]
 
         NavigationView {
-            ChatMessageVIew(recipientUser: Contact(documentId: "", data: data))
+            ChatMessageVIew(recipientUser: RecentChat(documentId: "", data: data))
                 .environmentObject(ChatViewModel())
         }
     }

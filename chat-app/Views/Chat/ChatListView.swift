@@ -14,15 +14,18 @@ struct ChatListView: View {
     var body: some View {
         VStack {
             ScrollView {
-//                ForEach(vmChat.chats, id: \.username) { chat in
-//                    NavigationLink {
-//                        ChatMessageVIew(recipientUser: vmChat.recipientUser)
-//                            .environmentObject(vmChat)
-//                    } label: {
-//                        ChatCardView(chat: chat)
-//                    }
-//
-//                }
+                ForEach(vmChat.recentChat) { recentChat in
+                    VStack {
+                        NavigationLink {
+                            ChatMessageVIew(recipientUser: recentChat)
+                                .environmentObject(vmChat)
+                        } label: {
+                            ChatCardView(recentChat: recentChat)
+                                .environmentObject(vmChat)
+                        }
+                    }
+
+                }
             }
             
             NavigationLink(isActive: $vmChat.moveToChatMessage) {
@@ -38,7 +41,7 @@ struct ChatListView: View {
         }
         .padding(.horizontal, 20)
         .onAppear {
-            
+            vmChat.fetchRecentMessages()
         }
         .sheet(isPresented: $vmChat.showContactList, onDismiss: {
             vmChat.usernameText = ""
