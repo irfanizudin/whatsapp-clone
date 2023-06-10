@@ -52,7 +52,6 @@ class ChatViewModel: ObservableObject {
                     
                         let contact = RecentChat(documentId: documentId, data: data)
                         self.contacts.append(contact)
-//                        print(self.contacts)
                     }
 
                 }
@@ -96,7 +95,7 @@ class ChatViewModel: ObservableObject {
             self.scrollToBottom.toggle()
         }
 
-        saveRecentMessage(recipientUser: recipientUser)
+        self.saveRecentMessage(recipientUser: recipientUser)
         
     }
     
@@ -104,9 +103,10 @@ class ChatViewModel: ObservableObject {
         
         self.chats.removeAll()
 
-        guard let fromId = Auth.auth().currentUser?.uid,
-              let toId = recipientUser.toId
+        guard let fromId = Auth.auth().currentUser?.uid
         else { return }
+
+        let toId = recipientUser.documentId
 
         Firestore.firestore().collection("Messages").document(fromId).collection(toId).order(by: "createdAt").addSnapshotListener { snapshot, error in
             if let error = error {
@@ -131,20 +131,54 @@ class ChatViewModel: ObservableObject {
     
     func convertBubbleChatTimeStamp(timestamp: Timestamp) -> String {
         let date = timestamp.dateValue()
+        
+        let calendar = Calendar.current
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "h:mm a"
         dateFormatter.locale = Locale.current
-        let formattedTime = dateFormatter.string(from: date)
-
-        return formattedTime
+        
+        if calendar.isDateInToday(date) {
+            dateFormatter.dateFormat = "h:mm a"
+            return dateFormatter.string(from: date)
+        } else if calendar.isDateInYesterday(date) {
+            dateFormatter.dateFormat = "'Yesterday' h:mm a"
+            return dateFormatter.string(from: date)
+        } else if calendar.isDateInWeekend(date) {
+            dateFormatter.dateFormat = "EEEE h:mm a"
+            return dateFormatter.string(from: date)
+        } else {
+            dateFormatter.dateFormat = "dd/MM/yy h:mm a"
+            return dateFormatter.string(from: date)
+        }
+    }
+    
+    func convertRecentChatTimestamp(timestamp: Timestamp) -> String {
+        let date = timestamp.dateValue()
+        
+        let calendar = Calendar.current
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale.current
+        
+        if calendar.isDateInToday(date) {
+            dateFormatter.dateFormat = "h:mm a"
+            return dateFormatter.string(from: date)
+        } else if calendar.isDateInYesterday(date) {
+            return "Yesterday"
+        } else if calendar.isDateInWeekend(date) {
+            dateFormatter.dateFormat = "EEEE"
+            return dateFormatter.string(from: date)
+        } else {
+            dateFormatter.dateFormat = "dd/MM/yy"
+            return dateFormatter.string(from: date)
+        }
     }
     
     func saveRecentMessage(recipientUser: RecentChat) {
         guard let fromId = Auth.auth().currentUser?.uid,
-              let toId = recipientUser.toId,
               let photoURL = recipientUser.photoURL,
               let username = recipientUser.username
         else { return }
+
+        let toId = recipientUser.documentId
 
         let data: [String: Any] = [
             "fromId": fromId,
@@ -191,7 +225,6 @@ class ChatViewModel: ObservableObject {
                     self.recentChat.append(recentChat)
                     
                 })
-//                print(self.recentChat)
                 print("Successfully fetch recent chat messages")
             }
         }

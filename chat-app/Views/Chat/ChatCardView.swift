@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct ChatCardView: View {
     
@@ -44,7 +45,7 @@ struct ChatCardView: View {
                 Spacer()
                 
                 if let timestamp = recentChat.createdAt {
-                    Text(vmChat.convertBubbleChatTimeStamp(timestamp: timestamp))
+                    Text(vmChat.convertRecentChatTimestamp(timestamp: timestamp))
                         .font(.callout)
                         .foregroundColor(.gray)
                 }
