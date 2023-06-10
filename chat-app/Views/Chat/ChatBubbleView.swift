@@ -22,10 +22,12 @@ struct ChatBubbleView: View {
                         Text(chat.text ?? "")
                             .foregroundColor(.black)
                         
-                        Text("11:33 AM")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                            .padding(.top, -5)
+                        if let timestamp = chat.createdAt {
+                            Text(vmChat.convertBubbleChatTimeStamp(timestamp: timestamp))
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                                .padding(.top, -5)
+                        }
                     }
                     .padding(.vertical, 8)
                     .padding(.horizontal, 12)
@@ -40,10 +42,12 @@ struct ChatBubbleView: View {
                         Text(chat.text ?? "")
                             .foregroundColor(.black)
                         
-                        Text("11:33 AM")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                            .padding(.top, -5)
+                        if let timestamp = chat.createdAt {
+                            Text(vmChat.convertBubbleChatTimeStamp(timestamp: timestamp))
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                                .padding(.top, -5)
+                        }
                     }
                     .padding(.vertical, 10)
                     .padding(.horizontal, 14)

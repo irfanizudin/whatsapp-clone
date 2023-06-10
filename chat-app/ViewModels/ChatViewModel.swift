@@ -122,4 +122,14 @@ class ChatViewModel: ObservableObject {
         }
     }
     
+    func convertBubbleChatTimeStamp(timestamp: Timestamp) -> String {
+        let date = timestamp.dateValue()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h:mm a"
+        dateFormatter.locale = Locale.current
+        let formattedTime = dateFormatter.string(from: date)
+
+        return formattedTime
+    }
+    
 }

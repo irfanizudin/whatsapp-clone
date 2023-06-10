@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Firebase
 
 struct Contact {
     let documentId: String?
@@ -27,14 +28,14 @@ struct Chat: Identifiable {
     let fromId: String?
     let toId: String?
     let text: String?
-    let createdAt: Date?
+    let createdAt: Timestamp?
     
     init(documentId: String, data: [String: Any]) {
         self.documentId = documentId
         self.fromId = data["fromId"] as? String
         self.toId = data["toId"] as? String
         self.text = data["text"] as? String
-        self.createdAt = data["createdAt"] as? Date
+        self.createdAt = data["createdAt"] as? Timestamp
     }
 
 }
