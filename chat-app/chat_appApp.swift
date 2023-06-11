@@ -17,6 +17,7 @@ struct chat_appApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(vm)
+                .preferredColorScheme(.light)
         }
     }
 }
