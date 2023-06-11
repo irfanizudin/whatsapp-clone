@@ -25,11 +25,10 @@ class AuthenticationViewModel: ObservableObject {
     @Published var isShowLoading: Bool = false
     @Published var nonce: String = ""
 
-
-
     @AppStorage("isSignedIn") var isSignedIn: Bool = false
     @AppStorage("isCompletedSetup") var isCompletedSetup: Bool = false
 
+    let vmChat = ChatViewModel()
 
     func signInWithGoogle() {
         
@@ -134,12 +133,12 @@ class AuthenticationViewModel: ObservableObject {
     func fetchUserData(completion: @escaping(Result<UserModel, Error>) -> ()) {
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
-        Firestore.firestore().collection("Users").document(userId).addSnapshotListener { snapshot, error in
+        Firestore.firestore().collection("Users").document(userId).getDocument { snapshot, error in
             if let error = error {
                 print("Failed to fetch data: ", error.localizedDescription)
                 return
             }
-            
+
             guard let document = snapshot?.data() else { return }
             
             let uid = document["uid"] as? String ?? ""
@@ -152,10 +151,9 @@ class AuthenticationViewModel: ObservableObject {
             let user = UserModel(uid: uid, fullName: fullName, username: username, email: email, photoURL: photoURL, photoName: photoName)
             self.user = user
             completion(.success(user))
-            print("Successfully fetch data")
-            
+            print("Successfully fetch user data")
+
         }
-        
     }
     
     func signOut() {
@@ -166,6 +164,7 @@ class AuthenticationViewModel: ObservableObject {
             self.isCompletedSetup = false
             self.image = UIImage(named: "")
             self.usernameText = ""
+            vmChat.fetchChatMessagesListener?.remove()
 
         } catch {
             print(error.localizedDescription)

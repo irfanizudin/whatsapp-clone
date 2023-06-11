@@ -26,6 +26,8 @@ struct ContactDetailView: View {
                         
             Spacer()
         }
+        .navigationTitle("Contact Info")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

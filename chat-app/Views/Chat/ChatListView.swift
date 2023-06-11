@@ -44,6 +44,10 @@ struct ChatListView: View {
             vmChat.fetchRecentMessages()
             vmChat.getCurrentUserId()
         }
+        .onDisappear {
+            vmChat.fetchRecentMessagesListener?.remove()
+            print("remove fetch recent message listener")
+        }
         .sheet(isPresented: $vmChat.showContactList, onDismiss: {
             vmChat.usernameText = ""
             vmChat.isContactListEmptyState = true

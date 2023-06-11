@@ -26,6 +26,10 @@ class ChatViewModel: ObservableObject {
     @Published var chats: [Chat] = []
     @Published var recentChat: [RecentChat] = []
     
+    var fetchChatMessagesListener: ListenerRegistration?
+    var fetchRecentMessagesListener: ListenerRegistration?
+
+    
     func getCurrentUserId() {
         self.currentUserId = Auth.auth().currentUser?.uid ?? ""
     }
@@ -99,6 +103,7 @@ class ChatViewModel: ObservableObject {
         
     }
     
+    
     func fetchChatMessages(recipientUser: RecentChat) {
         
         guard let fromId = Auth.auth().currentUser?.uid
@@ -106,7 +111,7 @@ class ChatViewModel: ObservableObject {
 
         let toId = recipientUser.documentId
 
-        Firestore.firestore().collection("Messages").document(fromId).collection(toId).order(by: "createdAt").addSnapshotListener { snapshot, error in
+        fetchChatMessagesListener = Firestore.firestore().collection("Messages").document(fromId).collection(toId).order(by: "createdAt").addSnapshotListener { snapshot, error in
             if let error = error {
                 print("Failed to fetch chat messages: ", error.localizedDescription)
             } else {
@@ -263,11 +268,12 @@ class ChatViewModel: ObservableObject {
 
     }
     
+    
     func fetchRecentMessages() {
         guard let fromId = Auth.auth().currentUser?.uid
         else { return }
 
-        Firestore.firestore().collection("RecentMessages").document(fromId).collection("Messages").order(by: "createdAt").addSnapshotListener { snapshot, error in
+        fetchRecentMessagesListener = Firestore.firestore().collection("RecentMessages").document(fromId).collection("Messages").order(by: "createdAt").addSnapshotListener { snapshot, error in
             if let error = error {
                 print("Failed to fetch recent chat messages: ", error.localizedDescription)
             } else {
