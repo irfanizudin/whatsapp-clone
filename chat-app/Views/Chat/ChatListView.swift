@@ -42,6 +42,7 @@ struct ChatListView: View {
         .padding(.horizontal, 20)
         .onAppear {
             vmChat.fetchRecentMessages()
+            vmChat.getCurrentUserId()
         }
         .sheet(isPresented: $vmChat.showContactList, onDismiss: {
             vmChat.usernameText = ""

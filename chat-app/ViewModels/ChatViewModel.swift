@@ -177,38 +177,89 @@ class ChatViewModel: ObservableObject {
     }
     
     func saveRecentMessage(recipientUser: RecentChat) {
-        guard let fromId = Auth.auth().currentUser?.uid,
-              let photoURL = recipientUser.photoURL,
-              let username = recipientUser.username
+        guard let fromId = Auth.auth().currentUser?.uid
         else { return }
+        let text1: String = self.chatText
+        let text2: String = self.chatText
 
         let toId = recipientUser.documentId
-
-        let data: [String: Any] = [
-            "fromId": fromId,
-            "toId": toId,
-            "text": chatText,
-            "createdAt": Timestamp(date: Date()),
-            "photoURL": photoURL,
-            "username": username
-        ]
-
-        Firestore.firestore().collection("RecentMessages").document(fromId).collection("Messages").document(toId).setData(data) { error in
+        var fullName: String = ""
+        var username: String = ""
+        var photoURL: String = ""
+        
+        Firestore.firestore().collection("Users").document(toId).getDocument { snapshot, error in
             if let error = error {
-                print("Failed to save recent message from currenUser: ", error.localizedDescription)
-            } else {
-                print("Successfully current user save recent message")
+                print("Failed to get User data :", error.localizedDescription)
+                return
             }
+            
+            guard let document = snapshot?.data() else { return }
+            fullName = document["fullName"] as? String ?? ""
+            username = document["username"] as? String ?? ""
+            photoURL = document["photoURL"] as? String ?? ""
+            print("Successfully get fullname, username and photoURL currentUser")
+            
+            let data: [String: Any] = [
+                "fromId": fromId,
+                "toId": toId,
+                "text": text1,
+                "createdAt": Timestamp(date: Date()),
+                "photoURL": photoURL,
+                "username": username,
+                "fullName": fullName
+            ]
+
+            Firestore.firestore().collection("RecentMessages").document(fromId).collection("Messages").document(toId).setData(data) { error in
+                if let error = error {
+                    print("Failed to save recent message from currenUser: ", error.localizedDescription)
+                } else {
+                    print("Successfully current user save recent message")
+                }
+            }
+
+            
+        }
+
+        
+        
+        var recipientFullName: String = ""
+        var recipientUsername: String = ""
+        var recipientPhotoURL: String = ""
+        
+        Firestore.firestore().collection("Users").document(fromId).getDocument { snapshot, error in
+            if let error = error {
+                print("Failed to get User data :", error.localizedDescription)
+                return
+            }
+            
+            guard let data = snapshot?.data() else { return }
+            recipientFullName = data["fullName"] as? String ?? ""
+            recipientUsername = data["username"] as? String ?? ""
+            recipientPhotoURL = data["photoURL"] as? String ?? ""
+            print("Successfully get fullname, username and photoURL recipientUser")
+
+            let dataRecipient: [String: Any] = [
+                "fromId": toId,
+                "toId": fromId,
+                "text": text2,
+                "createdAt": Timestamp(date: Date()),
+                "photoURL": recipientPhotoURL,
+                "username": recipientUsername,
+                "fullName": recipientFullName
+            ]
+
+            Firestore.firestore().collection("RecentMessages").document(toId).collection("Messages").document(fromId).setData(dataRecipient) { error in
+                if let error = error {
+                    print("Failed to save recent message from recipient: ", error.localizedDescription)
+                } else {
+                    print("Successfully recipient save recent message")
+                }
+
+            }
+
+
         }
         
-        Firestore.firestore().collection("RecentMessages").document(toId).collection("Messages").document(fromId).setData(data) { error in
-            if let error = error {
-                print("Failed to save recent message from recipient: ", error.localizedDescription)
-            } else {
-                print("Successfully recipient save recent message")
-            }
-
-        }
 
     }
     

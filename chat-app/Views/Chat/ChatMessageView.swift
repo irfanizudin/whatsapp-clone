@@ -12,7 +12,6 @@ struct ChatMessageVIew: View {
     @Environment(\.dismiss) var dismiss
     
     let recipientUser: RecentChat
-//    let recentChat: RecentChat?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -36,11 +35,16 @@ struct ChatMessageVIew: View {
                 
                 Spacer()
                 
-                Image(systemName: "info.circle")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 20)
-                    .foregroundColor(.blue)
+                NavigationLink {
+                    ContactDetailView(contact: recipientUser)
+                } label: {
+                    Image(systemName: "info.circle")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20)
+                        .foregroundColor(.blue)
+                }
+
 
             }
             .padding(.vertical, 8)

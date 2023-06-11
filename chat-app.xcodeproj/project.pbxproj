@@ -18,6 +18,7 @@
 		2E3ACF9B29CF15D100CB746D /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 2E3ACF9A29CF15D100CB746D /* FirebaseFirestore */; };
 		2E3ACF9D29CF15D100CB746D /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 2E3ACF9C29CF15D100CB746D /* FirebaseStorage */; };
 		2E3ACF9F29CF183700CB746D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2E3ACF9E29CF183700CB746D /* GoogleService-Info.plist */; };
+		2EEF87DC2A358AE800ED9260 /* ContactDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEF87DB2A358AE800ED9260 /* ContactDetailView.swift */; };
 		2EF94A762A2A315A00C8E932 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF94A752A2A315A00C8E932 /* ContentView.swift */; };
 		2EF94A782A2A344900C8E932 /* GoogleSignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF94A772A2A344900C8E932 /* GoogleSignInButton.swift */; };
 		2EF94A7B2A2A34B600C8E932 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 2EF94A7A2A2A34B600C8E932 /* GoogleSignIn */; };
@@ -55,6 +56,7 @@
 		2E3ACF9329CEAAAB00CB746D /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		2E3ACF9529CEAD4100CB746D /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 		2E3ACF9E29CF183700CB746D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		2EEF87DB2A358AE800ED9260 /* ContactDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDetailView.swift; sourceTree = "<group>"; };
 		2EF94A752A2A315A00C8E932 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2EF94A772A2A344900C8E932 /* GoogleSignInButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSignInButton.swift; sourceTree = "<group>"; };
 		2EF94A7E2A2A3B0E00C8E932 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 				2EF94AA92A2CE66B00C8E932 /* ChatCardView.swift */,
 				2EF94AAB2A2D817800C8E932 /* ChatMessageView.swift */,
 				2E22E91F2A2F948D00304D47 /* ChatBubbleView.swift */,
+				2EEF87DB2A358AE800ED9260 /* ContactDetailView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -332,6 +335,7 @@
 				2EF94AA02A2C265300C8E932 /* AppleAuth.swift in Sources */,
 				2E22E9202A2F948D00304D47 /* ChatBubbleView.swift in Sources */,
 				2EF94A9A2A2C125000C8E932 /* ImageProfileView.swift in Sources */,
+				2EEF87DC2A358AE800ED9260 /* ContactDetailView.swift in Sources */,
 				2EF94AAC2A2D817800C8E932 /* ChatMessageView.swift in Sources */,
 				2EF94AA32A2C2AA100C8E932 /* GoogleButtonView.swift in Sources */,
 				2EF94A812A2A3BEA00C8E932 /* User.swift in Sources */,

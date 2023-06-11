@@ -26,12 +26,14 @@ struct ChatCardView: View {
                         .padding(.bottom, 1)
                     
                     HStack {
-                        if recentChat.fromId == vmChat.currentUserId {
-                            Image(systemName: "checkmark")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 12, height: 12)
-                                .foregroundColor(.gray)
+                        if let fromId = vmChat.chats.last?.fromId {
+                            if fromId == vmChat.currentUserId {
+                                Image(systemName: "checkmark")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 12, height: 12)
+                                    .foregroundColor(.gray)
+                            }
                         }
                         Text(recentChat.text ?? "")
                             .font(.callout)
@@ -55,7 +57,6 @@ struct ChatCardView: View {
         .padding(.vertical, 5)
         .frame(maxWidth: .infinity, alignment: .leading)
         .onAppear {
-            vmChat.getCurrentUserId()
         }
     }
 }
