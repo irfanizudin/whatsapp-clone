@@ -4,14 +4,14 @@ WhatsChat is a native ios app of whatsapp clone
 
 ## Features
 
-- Sign In with Google
-- Sign In with Apple
-- Setup profile username and upload photo profile
-- Find contact by username
-- Show contact detail
-- Create a new message and chatting with others
-- Show recent messages
-- Show user profile
+- [x] Sign In with Google
+- [x] Sign In with Apple
+- [x] Setup profile username and upload photo profile
+- [x] Find contact by username
+- [x] Show contact detail
+- [x] Create a new message and chatting with others
+- [x] Show recent messages
+- [x] Show user profile
 - [ ] Show online status user
 - [ ] Send push notification when receiving new message
 - [ ] Send photo in chat message
