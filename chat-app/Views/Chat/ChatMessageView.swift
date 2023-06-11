@@ -116,9 +116,10 @@ struct ChatMessageVIew: View {
                         .scaledToFit()
                         .rotationEffect(.degrees(45))
                         .frame(width: 25)
-                        .foregroundColor(.blue)
+                        .foregroundColor(vmChat.chatText.isEmpty ? .gray : .blue)
                         .padding(.leading, 10)
                 }
+                .disabled(vmChat.chatText.isEmpty ? true : false)
 
 
             }
