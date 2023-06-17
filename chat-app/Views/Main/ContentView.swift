@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     
     @EnvironmentObject var vm: AuthenticationViewModel
+    @EnvironmentObject var vmChat: ChatViewModel
     @AppStorage("isSignedIn") var isSignedIn: Bool = false
     @AppStorage("isCompletedSetup") var isCompletedSetup: Bool = false
 
@@ -19,6 +20,7 @@ struct ContentView: View {
                 if isCompletedSetup {
                     MainView()
                         .environmentObject(vm)
+                        .environmentObject(vmChat)
                 } else {
                     SetupProfileView()
                         .environmentObject(vm)

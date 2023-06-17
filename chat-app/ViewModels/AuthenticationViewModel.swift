@@ -110,6 +110,8 @@ class AuthenticationViewModel: ObservableObject {
                         "email": user.email ?? "",
                         "photoURL": user.photoURL ?? "",
                         "photoName": "",
+                        "isOnline": true,
+                        "deviceToken": "",
                         "createdAt": Timestamp(date: Date()),
                         "updatedAt": Timestamp(date: Date())
                     ]

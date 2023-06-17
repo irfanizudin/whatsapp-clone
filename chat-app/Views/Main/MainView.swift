@@ -10,7 +10,7 @@ import SwiftUI
 struct MainView: View {
     
     @StateObject var vmMain = MainViewModel()
-    @StateObject var vmChat = ChatViewModel()
+    @EnvironmentObject var vmChat: ChatViewModel
     @EnvironmentObject var vm: AuthenticationViewModel
     
     var body: some View {
@@ -58,5 +58,6 @@ struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         MainView()
             .environmentObject(AuthenticationViewModel())
+            .environmentObject(ChatViewModel())
     }
 }

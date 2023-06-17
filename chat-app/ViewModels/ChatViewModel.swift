@@ -25,10 +25,12 @@ class ChatViewModel: ObservableObject {
     
     @Published var chats: [Chat] = []
     @Published var recentChat: [RecentChat] = []
+    @Published var isUserOnline: Bool = false
+    @Published var lastSeen: Timestamp = Timestamp(date: Date())
     
     var fetchChatMessagesListener: ListenerRegistration?
     var fetchRecentMessagesListener: ListenerRegistration?
-
+    var onlineStatusListener: ListenerRegistration?
     
     func getCurrentUserId() {
         self.currentUserId = Auth.auth().currentUser?.uid ?? ""
@@ -296,6 +298,39 @@ class ChatViewModel: ObservableObject {
             }
         }
 
+    }
+    
+    func updateOnlineStatus(userId: String, isOnline: Bool) {
+        if userId.isEmpty {
+            return
+        }
+        
+        let data: [String: Any] = [
+            "isOnline": isOnline,
+            "updatedAt": Timestamp(date: Date())
+        ]
+        
+        Firestore.firestore().collection("Users").document(userId).updateData(data) { error in
+            if let error = error {
+                print("Failed to update online status user: ", error.localizedDescription)
+            }
+            
+            print("Successfully upadate online status user")
+        }
+    }
+    
+    
+    func getOnlineStatus(userId: String) {
+        onlineStatusListener = Firestore.firestore().collection("Users").document(userId).addSnapshotListener({ document, error in
+            if let error = error {
+                print("Failed to listen online status user: ", error.localizedDescription)
+            }
+            
+            guard let data = document?.data() else { return }
+            self.isUserOnline = data["isOnline"] as? Bool ?? false
+            self.lastSeen = data["updatedAt"] as? Timestamp ?? Timestamp(date: Date())
+            print("Succesfully listen online status user")
+        })
     }
     
 }

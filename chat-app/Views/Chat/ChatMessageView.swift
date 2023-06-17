@@ -29,9 +29,14 @@ struct ChatMessageVIew: View {
                 
                 ImageProfileView(imageURL: recipientUser.photoURL ?? "", size: 50)
             
-                Text(recipientUser.username ?? "")
-                    .font(.headline.bold())
-                    .padding(.leading, 10)
+                VStack(alignment: .leading) {
+                    Text(recipientUser.username ?? "")
+                        .font(.headline.bold())
+                    Text(vmChat.isUserOnline ? "online" : "last seen \(vmChat.convertBubbleChatTimeStamp(timestamp: vmChat.lastSeen))")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                }
+                .padding(.leading, 10)
                 
                 Spacer()
                 
@@ -134,6 +139,11 @@ struct ChatMessageVIew: View {
         .onAppear {
             vmChat.fetchChatMessages(recipientUser: recipientUser)
             vmChat.getCurrentUserId()
+            vmChat.getOnlineStatus(userId: recipientUser.toId ?? "")
+        }
+        .onDisappear {
+            vmChat.onlineStatusListener?.remove()
+            print("remove online status listener")
         }
     }
 }
