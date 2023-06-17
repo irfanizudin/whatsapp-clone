@@ -12,7 +12,7 @@ WhatsChat is a native ios app of whatsapp clone
 - [x] Create a new message and chatting with others
 - [x] Show recent messages
 - [x] Show user profile
-- [ ] Show online status user
+- [x] Show online status user
 - [ ] Send push notification when receiving new message
 - [ ] Send photo in chat message
 
