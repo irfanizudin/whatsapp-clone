@@ -107,12 +107,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let userInfo = response.notification.request.content.userInfo
         
         print("Background push")
-        print(userInfo["link"] as Any)
+        print(userInfo["chat"] as Any)
         guard let urlString = userInfo["link"] as? String,
             let url = URL(string: urlString)
         else { return }
         
         print(url)
+//        ChatMessageVIew(recipientUser: RecentChat(documentId: "", data: ["sas": "sas"]))
 //        app?.vm.checkDeepLink(url: url)
         
     }

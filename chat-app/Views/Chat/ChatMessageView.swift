@@ -115,6 +115,7 @@ struct ChatMessageVIew: View {
             
                 Button {
                     vmChat.createNewMessage(recipientUser: recipientUser)
+                    vmChat.sendPushNotification(deviceToken: vmChat.deviceToken)
                 } label: {
                     Image(systemName: "paperplane.circle.fill")
                         .resizable()
@@ -140,6 +141,8 @@ struct ChatMessageVIew: View {
             vmChat.fetchChatMessages(recipientUser: recipientUser)
             vmChat.getCurrentUserId()
             vmChat.getOnlineStatus(userId: recipientUser.toId ?? "")
+            vmChat.getRecipientDeviceToken(userId: recipientUser.toId ?? "")
+            vmChat.getCurrentUsername(userId: recipientUser.fromId ?? "")
         }
         .onDisappear {
             vmChat.onlineStatusListener?.remove()

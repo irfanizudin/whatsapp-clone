@@ -27,6 +27,8 @@ class ChatViewModel: ObservableObject {
     @Published var recentChat: [RecentChat] = []
     @Published var isUserOnline: Bool = false
     @Published var lastSeen: Timestamp = Timestamp(date: Date())
+    @Published var deviceToken: String = ""
+    @Published var username: String = ""
     
     var fetchChatMessagesListener: ListenerRegistration?
     var fetchRecentMessagesListener: ListenerRegistration?
@@ -333,4 +335,68 @@ class ChatViewModel: ObservableObject {
         })
     }
     
+    func getRecipientDeviceToken(userId: String) {
+        Firestore.firestore().collection("Users").document(userId).getDocument { document, error in
+            if let error = error {
+                print("Failed to get device token")
+            }
+            
+            guard let data = document?.data() else { return }
+            self.deviceToken = data["deviceToken"] as? String ?? ""
+            print("Succesfully get device token")
+        }
+    }
+    
+    func getCurrentUsername(userId: String) {
+        Firestore.firestore().collection("Users").document(userId).getDocument { document, error in
+            if let error = error {
+                print("Failed to get username")
+            }
+            
+            guard let data = document?.data() else { return }
+            self.username = data["username"] as? String ?? ""
+            print("Succesfully get username")
+        }
+
+    }
+        
+    func sendPushNotification(deviceToken: String) {
+        
+        guard let url = URL(string: "https://fcm.googleapis.com/fcm/send") else { return }
+
+        let apiKey = APIKey.FCMAPIKey
+
+        let notification: [String: Any] = [
+            "to": deviceToken,
+            "notification": [
+                "title": username,
+                "body": chatText,
+                "sound": "notif_sound.mp3"
+            ],
+            "data": [
+                "link": "app://product=3",
+                "chat": recipientUser as Any
+            ] as [String : Any]
+        ]
+        
+        let jsonData = try! JSONSerialization.data(withJSONObject: notification, options: [])
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("key=\(apiKey)", forHTTPHeaderField: "Authorization")
+        request.httpBody = jsonData
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error sending FCM notification: \(error.localizedDescription)")
+                return
+            }
+            
+            print("FCM notification sent successfully.")
+
+        }
+        
+        task.resume()
+    }
 }
