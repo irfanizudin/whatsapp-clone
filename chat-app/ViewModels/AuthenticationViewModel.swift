@@ -24,6 +24,7 @@ class AuthenticationViewModel: ObservableObject {
     @Published var alertMessage: String = ""
     @Published var isShowLoading: Bool = false
     @Published var nonce: String = ""
+    @Published var deviceToken: String = ""
 
     @AppStorage("isSignedIn") var isSignedIn: Bool = false
     @AppStorage("isCompletedSetup") var isCompletedSetup: Bool = false
@@ -98,34 +99,27 @@ class AuthenticationViewModel: ObservableObject {
             } else {
                 print("save data")
                 
-                if user.email == nil {
-//                    self.updateAppleSignIn(user: user, userId: userId)
-
-                } else {
-                    
-                    let data: [String: Any] = [
-                        "uid": user.uid ?? "",
-                        "fullName": user.fullName ?? "",
-                        "username": "",
-                        "email": user.email ?? "",
-                        "photoURL": user.photoURL ?? "",
-                        "photoName": "",
-                        "isOnline": true,
-                        "deviceToken": "",
-                        "createdAt": Timestamp(date: Date()),
-                        "updatedAt": Timestamp(date: Date())
-                    ]
-                    
-                    Firestore.firestore().collection("Users").document(userId).setData(data) { error in
-                        if let error = error {
-                            print("error saving data to firestore: ", error.localizedDescription)
-                        } else {
-                            print("successfully save data to firestore")
-                        }
+                let data: [String: Any] = [
+                    "uid": user.uid ?? "",
+                    "fullName": user.fullName ?? "",
+                    "username": "",
+                    "email": user.email ?? "",
+                    "photoURL": user.photoURL ?? "",
+                    "photoName": "",
+                    "isOnline": true,
+                    "deviceToken": self.deviceToken,
+                    "createdAt": Timestamp(date: Date()),
+                    "updatedAt": Timestamp(date: Date())
+                ]
+                
+                Firestore.firestore().collection("Users").document(userId).setData(data) { error in
+                    if let error = error {
+                        print("error saving data to firestore: ", error.localizedDescription)
+                    } else {
+                        print("successfully save data to firestore")
                     }
-
                 }
-
+                
                 
             }
         }
